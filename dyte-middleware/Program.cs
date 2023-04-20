@@ -1,4 +1,6 @@
 
+using dyte_middleware.Utils;
+
 namespace dyte_middleware
 {
     public class Program
@@ -7,8 +9,51 @@ namespace dyte_middleware
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            //Fetch and values from appsettings.json
+            var apiKey = builder.Configuration.GetSection("DyteCredentials:APIKey").Value;
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                Globals.ApiKey = apiKey;
+            }
+            var orgId = builder.Configuration.GetSection("DyteCredentials:OrganizationId").Value;
+            if (!string.IsNullOrEmpty(orgId))
+            {
+                Globals.OrganizationId = orgId;
+            }
+            var accountName = builder.Configuration.GetSection("AzureCredentials:AccountName").Value;
+            if (!string.IsNullOrEmpty(accountName))
+            {
+                Globals.AzureStorageAccountName = accountName;
+            }
+            var meetingsTableName = builder.Configuration.GetSection("AzureCredentials:MeetingsTableName").Value;
+            if (!string.IsNullOrEmpty(meetingsTableName))
+            {
+                Globals.AzureTableForMeetings = meetingsTableName;
+            }
+            var invitesTableName = builder.Configuration.GetSection("AzureCredentials:InvitesTableName").Value;
+            if (!string.IsNullOrEmpty(invitesTableName))
+            {
+                Globals.AzureTableForInvites = invitesTableName;
+            }
+            var participantWebhookTableName = builder.Configuration.GetSection("AzureCredentials:ParticipantWebhookTableName").Value;
+            if (!string.IsNullOrEmpty(participantWebhookTableName))
+            {
+                Globals.AzureTableForParticipantWebhook = participantWebhookTableName;
+            }
+            var accountKey = builder.Configuration.GetSection("AzureCredentials:StorageAccountKey").Value;
+            if (!string.IsNullOrEmpty(accountKey))
+            {
+                Globals.AzureStorageAccountKey = accountKey;
+            }
+            var storageUri = builder.Configuration.GetSection("AzureCredentials:StorageUri").Value;
+            if (!string.IsNullOrEmpty(storageUri))
+            {
+                Globals.AzureStorageUri = storageUri;
+            }
 
+
+
+            // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +71,6 @@ namespace dyte_middleware
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
